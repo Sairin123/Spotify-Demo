@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify - Premium Web Player</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="logo.svg" alt="Spotify Logo" class="spotify-logo">
+                <span class="logo-text">Spotify</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <ul>
+                    <li class="nav-item active" id="nav-home">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </li>
+                    <li class="nav-item" id="nav-search-sidebar">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Search</span>
+                    </li>
+                    <li class="nav-item" id="nav-artists-sidebar">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Artists</span>
+                    </li>
+                    <li class="nav-item" id="nav-favorites">
+                        <i class="fa-solid fa-heart text-green"></i>
+                        <span>Liked Songs</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="library-container">
+                <div class="library-header">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Your Library</span>
+                    <button class="add-playlist-btn" id="create-playlist-btn" title="Create Playlist">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+                
+                <div class="playlist-list" id="playlists-container">
+                    <div class="playlist-item active" data-playlist="all">
+                        <div class="playlist-icon-box">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <div class="playlist-details">
+                            <span class="playlist-name">All Tracks</span>
+                            <span class="playlist-count" id="all-tracks-count">8 Songs</span>
+                        </div>
+                    </div>
+                    <div class="playlist-item" data-playlist="favorites">
+                        <div class="playlist-icon-box liked-songs-bg">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="playlist-details">
+                            <span class="playlist-name">Liked Songs</span>
+                            <span class="playlist-count" id="liked-tracks-count">0 Songs</span>
+                        </div>
+                    </div>
+                    <div class="playlist-item" data-playlist="hindi">
+                        <div class="playlist-icon-box ambient-bg">
+                            <i class="fa-solid fa-guitar"></i>
+                        </div>
+                        <div class="playlist-details">
+                            <span class="playlist-name">Hindi Special</span>
+                            <span class="playlist-count">3 Songs</span>
+                        </div>
+                    </div>
+                    <div class="playlist-item" data-playlist="english">
+                        <div class="playlist-icon-box electronic-bg">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <div class="playlist-details">
+                            <span class="playlist-name">English Hits</span>
+                            <span class="playlist-count">5 Songs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Track Album Art Display on Sidebar -->
+            <div class="sidebar-album-display">
+                <img src="download.jpeg" alt="Album Art" id="sidebar-album-art" class="rotating-record">
+                <div class="disk-center"></div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Navigation / Search bar / User Profile -->
+            <header class="top-nav">
+                <div class="nav-arrows">
+                    <button class="arrow-btn" disabled><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="arrow-btn" disabled><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="search-input" placeholder="What do you want to listen to?">
+                    <button id="clear-search-btn" class="clear-btn" style="display: none;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="user-profile-container" style="position: relative; z-index: 50;">
+                    <div class="user-profile" id="user-profile-btn">
+                        <div class="profile-avatar-circle" id="profile-avatar-box" style="width: 28px; height: 28px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: var(--color-primary); color: #000; font-weight: 700; font-size: 12px;">
+                            <img src="giphy.gif" alt="User Avatar" class="profile-avatar" id="profile-avatar-img" style="width: 100%; height: 100%; object-fit: cover;">
+                            <span id="profile-avatar-initials" class="hidden">DG</span>
+                        </div>
+                        <span class="profile-name" id="profile-display-name">Dev Guest</span>
+                        <i class="fa-solid fa-caret-down profile-caret" style="margin-left: 4px; font-size: 12px; color: var(--color-text-muted);"></i>
+                    </div>
+                    
+                    <!-- Profile Options Dropdown -->
+                    <div class="profile-dropdown hidden" id="profile-dropdown-menu">
+                        <div class="dropdown-item" id="opt-profile-details"><i class="fa-regular fa-user"></i> Profile</div>
+                        <div class="dropdown-item" id="opt-settings"><i class="fa-solid fa-sliders"></i> Settings</div>
+                        <div class="dropdown-item" id="opt-auth" style="border-top: 1px solid #3e3e3e; margin-top: 4px;"><i class="fa-solid fa-right-from-bracket"></i> Log Out</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable content wrapper -->
+            <div class="content-scrollable">
+                <!-- VIEW 1: HOME PANEL -->
+                <div id="home-view" class="view-panel">
+                    <!-- Hero section -->
+                    <section class="hero-section" id="hero-banner">
+                        <div class="hero-content">
+                            <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Featured Track</span>
+                            <h1 class="hero-title" id="hero-song-title">Meri Zindagi Tu Hai</h1>
+                            <p class="hero-meta">Jubin Nautiyal • <span id="hero-play-count">1.2M plays</span> • 4:26</p>
+                            <div class="hero-actions">
+                                <button class="btn btn-primary" id="hero-play-btn">
+                                    <i class="fa-solid fa-play"></i> PLAY
+                                </button>
+                                <button class="btn btn-outline" id="hero-like-btn">
+                                    <i class="fa-regular fa-heart"></i> LIKE
+                                </button>
+                            </div>
+                        </div>
+                        <div class="hero-image-overlay"></div>
+                    </section>
+
+                    <!-- Language Filters -->
+                    <section class="category-section">
+                        <div class="filters-container">
+                            <button class="filter-pill active" data-filter="all">All Languages</button>
+                            <button class="filter-pill" data-filter="english">English</button>
+                            <button class="filter-pill" data-filter="hindi">Hindi</button>
+                            <button class="filter-pill" data-filter="bengali">Bengali</button>
+                            <button class="filter-pill" data-filter="marathi">Marathi</button>
+                            <button class="filter-pill" data-filter="spanish">Spanish</button>
+                            <button class="filter-pill" data-filter="korean">Korean</button>
+                            <button class="filter-pill" data-filter="japanese">Japanese</button>
+                        </div>
+                    </section>
+
+                    <!-- Popular Artists Shelf -->
+                    <section class="songs-section" style="padding-bottom: 0;">
+                        <div class="section-header">
+                            <h2 class="section-title">Popular Artists</h2>
+                            <span class="view-all-link" id="view-all-artists-btn">View All</span>
+                        </div>
+                        <div class="artists-grid-row" id="home-artists-shelf">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </section>
+
+                    <!-- Tracks Table Section -->
+                    <section class="songs-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Popular Tracks</h2>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="songs-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-num">#</th>
+                                        <th class="col-title">Title</th>
+                                        <th class="col-album">Album</th>
+                                        <th class="col-date">Date Added</th>
+                                        <th class="col-action"><i class="fa-regular fa-clock"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tracks-table-body">
+                                    <!-- Songs will be generated dynamically by script.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- VIEW 2: ARTISTS DIRECTORY PANEL -->
+                <div id="artists-view" class="view-panel hidden">
+                    <section class="songs-section">
+                        <div class="section-header">
+                            <h2 class="section-title" style="font-size: 28px;">Artists Directory</h2>
+                        </div>
+                        <div class="artists-full-grid" id="artists-directory-grid">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </section>
+                </div>
+
+                <!-- VIEW 3: ARTIST DETAILS PANEL -->
+                <div id="artist-details-view" class="view-panel hidden">
+                    <!-- Dynamic Artist Header -->
+                    <section class="artist-banner" id="artist-profile-banner">
+                        <div class="artist-banner-content">
+                            <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Verified Artist</span>
+                            <h1 class="artist-banner-name" id="artist-profile-name">Artist Name</h1>
+                            <p class="artist-banner-listeners" id="artist-profile-listeners">0 monthly listeners</p>
+                        </div>
+                        <div class="artist-banner-overlay"></div>
+                    </section>
+
+                    <section class="songs-section">
+                        <!-- Artist Controls -->
+                        <div class="artist-page-controls" style="display: flex; gap: 16px; margin-bottom: 24px; align-items: center;">
+                            <button class="btn btn-primary" id="artist-play-all-btn" style="border-radius: 50%; width: 56px; height: 56px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                                <i class="fa-solid fa-play" style="margin-left: 4px;"></i>
+                            </button>
+                            <p class="artist-bio-text" id="artist-profile-bio" style="color: var(--color-text-muted); font-size: 14px; line-height: 1.5; max-width: 600px; margin-left: 16px;"></p>
+                        </div>
+
+                        <div class="section-header">
+                            <h2 class="section-title">Popular Releases</h2>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="songs-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-num">#</th>
+                                        <th class="col-title">Title</th>
+                                        <th class="col-album">Album</th>
+                                        <th class="col-date">Date Added</th>
+                                        <th class="col-action"><i class="fa-regular fa-clock"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="artist-tracks-table-body">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- VIEW 4: PLAYLIST DETAILS PANEL -->
+                <div id="playlist-details-view" class="view-panel hidden">
+                    <section class="artist-banner playlist-banner" id="playlist-details-banner">
+                        <div class="artist-banner-content">
+                            <span class="verified-badge" style="letter-spacing: 0.5px; text-transform: none;"><i class="fa-solid fa-music"></i> Playlist</span>
+                            <h1 class="artist-banner-name" id="playlist-details-name">Playlist Name</h1>
+                            <p class="artist-banner-listeners" id="playlist-details-meta">0 songs • Created by Dev Guest</p>
+                        </div>
+                        <div class="artist-banner-overlay" style="background: linear-gradient(180deg, rgba(80, 80, 240, 0.4) 0%, rgba(18, 18, 18, 0.95) 100%);"></div>
+                    </section>
+
+                    <section class="songs-section">
+                        <div class="artist-page-controls" style="display: flex; gap: 16px; margin-bottom: 24px; align-items: center;">
+                            <button class="btn btn-primary" id="playlist-play-all-btn" style="border-radius: 50%; width: 56px; height: 56px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                                <i class="fa-solid fa-play" style="margin-left: 4px;"></i>
+                            </button>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="songs-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-num">#</th>
+                                        <th class="col-title">Title</th>
+                                        <th class="col-album">Album</th>
+                                        <th class="col-date">Date Added</th>
+                                        <th class="col-action"><i class="fa-regular fa-clock"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="playlist-tracks-table-body">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- VIEW 5: SEARCH & BROWSE PANEL -->
+                <div id="search-view" class="view-panel hidden">
+                    <section class="songs-section">
+                        <!-- Browse Categories (visible when search input is empty) -->
+                        <div id="search-default-browse">
+                            <div class="section-header">
+                                <h2 class="section-title" style="font-size: 24px;">Browse all</h2>
+                            </div>
+                            <div class="search-browse-grid">
+                                <div class="browse-card card-pop">
+                                    <span>Pop</span>
+                                </div>
+                                <div class="browse-card card-bollywood">
+                                    <span>Bollywood</span>
+                                </div>
+                                <div class="browse-card card-electronic">
+                                    <span>Electronic</span>
+                                </div>
+                                <div class="browse-card card-chill">
+                                    <span>Chill Ambient</span>
+                                </div>
+                                <div class="browse-card card-latin">
+                                    <span>Spanish Hits</span>
+                                </div>
+                                <div class="browse-card card-kpop">
+                                    <span>K-Pop</span>
+                                </div>
+                                <div class="browse-card card-jpop">
+                                    <span>J-Pop</span>
+                                </div>
+                                <div class="browse-card card-rock">
+                                    <span>Rock</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search Results (visible when search query is active) -->
+                        <div id="search-results-container" class="hidden">
+                            <!-- Songs Search Results -->
+                            <div class="search-results-section">
+                                <div class="section-header">
+                                    <h2 class="section-title">Songs</h2>
+                                </div>
+                                <div class="table-container">
+                                    <table class="songs-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-num">#</th>
+                                                <th class="col-title">Title</th>
+                                                <th class="col-album">Album</th>
+                                                <th class="col-date">Date Added</th>
+                                                <th class="col-action"><i class="fa-regular fa-clock"></i></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="search-tracks-table-body">
+                                            <!-- Populated dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Artists Search Results -->
+                            <div class="search-results-section" style="margin-top: 32px;">
+                                <div class="section-header">
+                                    <h2 class="section-title">Artists</h2>
+                                </div>
+                                <div class="artists-grid-row" id="search-artists-shelf" style="padding-top: 8px;">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bottom Playback Control Bar -->
+    <footer class="bottom-player">
+        <!-- Track Details Left -->
+        <div class="player-left">
+            <div class="now-playing-info">
+                <div class="now-playing-cover-box">
+                    <img src="download.jpeg" alt="Track Cover" id="now-playing-cover">
+                </div>
+                <div class="now-playing-details">
+                    <h4 class="now-playing-title" id="now-playing-title">Meri Zindagi Tu Hai</h4>
+                    <p class="now-playing-artist" id="now-playing-artist">Jubin Nautiyal</p>
+                </div>
+                <button class="player-heart-btn" id="player-favorite-btn">
+                    <i class="fa-regular fa-heart"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Player Controls Center -->
+        <div class="player-center">
+            <div class="player-controls">
+                <button class="control-btn" id="shuffle-btn" title="Enable Shuffle">
+                    <i class="fa-solid fa-shuffle"></i>
+                </button>
+                <button class="control-btn" id="prev-btn" title="Previous Song">
+                    <i class="fa-solid fa-backward-step"></i>
+                </button>
+                <button class="control-btn play-pause-btn-main" id="play-pause-btn" title="Play">
+                    <i class="fa-solid fa-play"></i>
+                </button>
+                <button class="control-btn" id="next-btn" title="Next Song">
+                    <i class="fa-solid fa-forward-step"></i>
+                </button>
+                <button class="control-btn" id="repeat-btn" title="Enable Repeat (Off)">
+                    <i class="fa-solid fa-repeat"></i>
+                </button>
+            </div>
+
+            <div class="progress-bar-container">
+                <span class="time-label" id="current-time">0:00</span>
+                <div class="slider-wrapper">
+                    <input type="range" id="myProgressBar" min="0" max="100" value="0">
+                    <div class="slider-progress" id="slider-progress-fill"></div>
+                </div>
+                <span class="time-label" id="duration-time">0:00</span>
+            </div>
+        </div>
+
+        <!-- Volume and Extra Controls Right -->
+        <div class="player-right">
+            <div class="volume-container">
+                <button class="control-btn" id="volume-icon" title="Mute Volume">
+                    <i class="fa-solid fa-volume-high"></i>
+                </button>
+                <div class="slider-wrapper volume-slider-wrapper">
+                    <input type="range" id="volume-slider" min="0" max="100" value="80">
+                    <div class="slider-progress" id="volume-progress-fill" style="width: 80%;"></div>
+                </div>
+            </div>
+            <button class="control-btn visualizer-toggle" id="visualizer-btn" title="Toggle Music Visualizer">
+                <i class="fa-solid fa-chart-simple"></i>
+            </button>
+        </div>
+    </footer>
+
+    <!-- Audio Element -->
+    <audio id="main-audio"></audio>
+
+    <!-- Visualizer Canvas Container -->
+    <div id="visualizer-overlay" class="visualizer-overlay hidden">
+        <canvas id="visualizer-canvas"></canvas>
+        <div class="visualizer-header">
+            <h3>Audio Visualizer</h3>
+            <button id="close-visualizer-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="visualizer-song-details">
+            <h2 id="viz-song-title">Song Title</h2>
+            <p id="viz-song-artist">Artist</p>
+        </div>
+    </div>
+
+    <!-- Playlist Create Modal -->
+    <div id="create-playlist-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>Create Playlist</h3>
+            <input type="text" id="new-playlist-name-input" placeholder="My Playlist #1">
+            <div class="modal-actions">
+                <button id="cancel-playlist-btn" class="btn btn-outline">Cancel</button>
+                <button id="confirm-playlist-btn" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>Log in to Spotify</h3>
+            <p style="color: var(--color-text-muted); font-size: 13px; margin-top: -10px; margin-bottom: 5px;">Enter any username to personalize your experience!</p>
+            <input type="text" id="login-username-input" placeholder="Username">
+            <input type="password" id="login-password-input" placeholder="Password (Optional)">
+            <div class="modal-actions">
+                <button id="cancel-login-btn" class="btn btn-outline">Cancel</button>
+                <button id="confirm-login-btn" class="btn btn-primary">Log In</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script File -->
+    <script src="script.js"></script>
+</body>
+</html>
