@@ -3,7 +3,7 @@
 A modern, interactive music streaming web application inspired by the Spotify interface.  
 This project is built using **HTML, CSS, and Vanilla JavaScript** and provides a responsive music-player experience with playlists, artists, search, favorites, audio controls, and an audio visualizer.
 
-![Spotify Web Player](realistic-music-record-label-disk-mockup_1017-33906.jpg)
+
 
 ## ✨ Features
 
