@@ -101,6 +101,22 @@ The interface includes a user profile section with:
 The default profile is displayed as **Dev Guest**. 
 
 ---
+## UI Overview
+
+┌──────────────────────────────────────────────────────────┐
+│ Sidebar │ Search Bar                         │ Profile   │
+├─────────┼────────────────────────────────────────────────┤
+│         │                                                │
+│ Home    │              Featured Track                    │
+│ Search  │                                                │
+│ Artists │              Popular Artists                   │
+│ Liked   │                                                │
+│         │              Popular Tracks                    │
+│ Library │                                                │
+│         │                                                │
+├─────────┴────────────────────────────────────────────────┤
+│              Music Player / Controls                     │
+└──────────────────────────────────────────────────────────┘
 
 ## 🛠️ Technologies Used
 
@@ -134,3 +150,4 @@ Spotify-Web-Player/
 ├── Meri Zindagi Tu Hai.mp3
 │
 └── README.md
+
